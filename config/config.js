@@ -5,8 +5,8 @@ module.exports = {
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
 
   ROLES: {
+    SUPER_ADMIN: "super_admin",
     ADMIN: "admin",
-    MID: "mid",
-    CLIENT: "client",
+    USER: "user",
   },
 };
