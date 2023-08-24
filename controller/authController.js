@@ -1,49 +1,37 @@
+const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const config = require("../config/config");
 const User = require("../model/user");
-const Role = require("../model/role");
 
-const authController = {
-  async signup(req, res) {
-    try {
-      const {
-        first_name,
-        last_name,
-        email,
-        country_code,
-        phone_number,
-        password,
-      } = req.body;
-      const user = await User.findOne({ email });
-      if (user) {
-        return res.status(400).json({
-          message: "User already exists",
-        });
-      }
-      const newUser = await User.create({
-        first_name,
-        last_name,
-        email,
-        country_code,
-        phone_number,
-        password,
-      });
-      const token = jwt.sign({ id: newUser._id }, config.JWT_SECRET, {
-        expiresIn: config.JWT_EXPIRES_IN,
-      });
-      return res.status(201).json({
-        message: "User created successfully",
-        token,
-        user: newUser,
-      });
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-        message: "Something went wrong",
-      });
-    }
-  },
+exports.signup = async (req, res) => {
+  try {
+    const newUser = new User(req.body);
+    const user = await newUser.save();
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-module.exports = authController;
-// Path: authify-backend/controller/productController.js
+exports.login = async (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
+    if (err) throw err;
+    if (!user) res.status(400).json({ error: "Invalid credentials" });
+    else {
+      req.logIn(user, { session: false }, (err) => {
+        if (err) throw err;
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        res.status(200).json({ token });
+      });
+    }
+  })(req, res, next);
+};
+
+exports.googleCallback = async (req, res) => {
+  const token = jwt.sign({ _id: req.user._id }, process.env.JWT_SECRET);
+  res.status(200).json({ token });
+};
+
+exports.logout = async (req, res) => {
+  req.logout();
+  res.status(200).json({ message: "Logged out successfully" });
+};

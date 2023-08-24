@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
     required: true,
@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema({
     lowercase: true,
   },
   role: {
-    type: "user" | "admin" | "super_admin",
+    type: String,
     required: true,
     trim: true,
     lowercase: true,
@@ -58,4 +58,4 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("User", productSchema);
+module.exports = mongoose.model("User", userSchema);
