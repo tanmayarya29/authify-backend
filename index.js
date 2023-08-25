@@ -7,6 +7,7 @@ const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("./model/user");
 const productRouter = require("./routes/productRoutes");
 const authRouter = require("./routes/authRoutes");
+const rolesRouter = require("./routes/rolesRoute");
 const config = require("./config/config");
 
 const app = express();
@@ -62,7 +63,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 app.use("/auth", authRouter);
-app.use("/product", productRouter);
+app.use("/products", productRouter);
+app.use("/roles", rolesRouter);
 
 mongoose
   .connect(config.MONGODB_URI, {
