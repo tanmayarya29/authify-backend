@@ -2,6 +2,7 @@ module.exports = {
   PORT: process.env.PORT,
   MONGODB_URI: process.env.MONGODB_URI,
   JWT_SECRET: process.env.JWT_SECRET,
+  JWT_SECRET_REFRESH: process.env.JWT_SECRET_REFRESH,
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
 
   ROLES: {
