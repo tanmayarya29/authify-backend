@@ -3,16 +3,16 @@ const { client } = require("../config/redis");
 const config = require("../config/config");
 
 const generateTokenByRefresh = async (req, res) => {
-  const refreshToken = req.body.token;
-  if (refreshToken == null)
-    return res.status(401).json({ error: "Unauthorized" });
+  const email = req.body.email; // email is used as key for redis and refresh token is value
+  if (email == null) return res.status(401).json({ error: "Unauthorized" });
   client
-    .get(refreshToken)
+    .get(email)
     .then((reply) => {
+      // reply is refresh token
       if (!reply) {
         return res.status(403).json({ error: "Forbidden access" });
       }
-      jwt.verify(refreshToken, config.JWT_SECRET_REFRESH, (err, user) => {
+      jwt.verify(reply, config.JWT_SECRET_REFRESH, (err, user) => {
         if (err) {
           return res.status(403).json({ error: "Forbidden access" });
         }

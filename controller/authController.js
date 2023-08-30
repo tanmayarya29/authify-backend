@@ -53,7 +53,7 @@ exports.login = async (req, res) => {
             config.JWT_SECRET_REFRESH
           );
           client
-            .set(refreshToken, user.email)
+            .set(user.email, refreshToken)
             .then(() => {
               res.status(200).json({
                 accessToken: accessToken,
@@ -76,9 +76,9 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  const refreshToken = req.body.token;
+  const email = req.body.email;
   client
-    .del(refreshToken)
+    .del(email)
     .then(() => {
       res.status(204).json({ message: "Logged out successfully" });
     })

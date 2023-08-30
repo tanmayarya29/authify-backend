@@ -6,8 +6,15 @@ const authRouter = require("./routes/authRoutes");
 const rolesRouter = require("./routes/rolesRoute");
 const config = require("./config/config");
 const { client } = require("./config/redis");
+const cors = require("cors");
 
 const app = express();
+
+// const corsOptions = {
+//   origin: 'http://yourfrontenddomain.com', // Replace with your frontend's domain
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, // Allow cookies, authentication headers, etc.
+// };
 
 // redis
 client.on("error", (err) => {
@@ -20,6 +27,7 @@ client
   .catch((err) => console.log(err));
 //
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
